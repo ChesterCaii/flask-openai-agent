@@ -5,7 +5,7 @@ This module provides a simple interface to interact with OpenAI's API.
 It handles message formatting and response processing for chat completions.
 """
 
-import openai
+from openai import OpenAI, OpenAIError
 from config import OPENAI_API_KEY, OPENAI_MODEL
 
 class Agent:
@@ -22,9 +22,15 @@ class Agent:
         
         Args:
             model (str): The OpenAI model to use (default: from config)
+            
+        Raises:
+            ValueError: If OPENAI_API_KEY is not set
         """
+        if not OPENAI_API_KEY:
+            raise ValueError("OpenAI API key is not set. Please set OPENAI_API_KEY in your .env file.")
+            
         self.model = model
-        openai.api_key = OPENAI_API_KEY
+        self.client = OpenAI(api_key=OPENAI_API_KEY)
 
     def run(self, history):
         """
@@ -38,13 +44,22 @@ class Agent:
             str: The assistant's response text
         
         Raises:
-            Exception: If there's an error communicating with OpenAI
+            ValueError: If history is empty or invalid
+            OpenAIError: If there's an error communicating with OpenAI
+            Exception: For other unexpected errors
         """
+        if not history:
+            raise ValueError("Conversation history cannot be empty")
+            
         try:
-            response = openai.ChatCompletion.create(
+            response = self.client.chat.completions.create(
                 model=self.model,
-                messages=history
+                messages=history,
+                temperature=0.7,
             )
-            return response.choices[0].message["content"].strip()
+            return response.choices[0].message.content.strip()
+            
+        except OpenAIError as e:
+            raise OpenAIError(f"OpenAI API error: {str(e)}")
         except Exception as e:
-            raise Exception(f"Error communicating with OpenAI: {str(e)}") 
+            raise Exception(f"Unexpected error while communicating with OpenAI: {str(e)}") 

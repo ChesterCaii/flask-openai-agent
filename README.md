@@ -11,6 +11,9 @@ A production-ready starter kit for building AI-powered chat applications using F
 - 📝 Comprehensive documentation and examples
 - 🧪 Unit tests included
 
+## ⚠️ Security Note
+**IMPORTANT**: Never commit your actual OpenAI API key to version control. Always use environment variables and keep your `.env` file in your `.gitignore`. The `.env.example` file contains placeholder values only.
+
 ## 🛠 Quick Start
 
 1. Clone the repository:
@@ -48,6 +51,8 @@ A production-ready starter kit for building AI-powered chat applications using F
 
 5. Open http://localhost:8000 in your browser
 
+> **Note**: On macOS, port 5000 is often used by AirPlay. The application defaults to port 5001 to avoid conflicts. If you need to use a different port, update the `FLASK_PORT` in your `.env` file.
+
 ## 🔍 Testing
 
 Run the test suite:
@@ -59,12 +64,12 @@ pytest tests/
 
 ### Health Check
 ```bash
-curl http://localhost:5000/ping
+curl http://localhost:5001/ping
 ```
 
 ### Chat with the Agent
 ```bash
-curl -X POST http://localhost:5000/ask \
+curl -X POST http://localhost:5001/ask \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "What is the capital of France?",
@@ -75,7 +80,7 @@ curl -X POST http://localhost:5000/ask \
 
 ### Multi-turn Conversation
 ```bash
-curl -X POST http://localhost:5000/ask \
+curl -X POST http://localhost:5001/ask \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "Tell me more about that.",
@@ -156,13 +161,16 @@ The application can be configured through environment variables in `.env`:
 
 ```env
 # OpenAI Configuration
-OPENAI_API_KEY=your-api-key-here
-OPENAI_MODEL=gpt-3.5-turbo
+OPENAI_API_KEY=your-api-key-here  # Get your API key from https://platform.openai.com/api-keys
+OPENAI_MODEL=gpt-3.5-turbo       # Default model to use (gpt-3.5-turbo or gpt-4)
 
 # Flask Configuration
-FLASK_HOST=0.0.0.0
-FLASK_PORT=5000
-FLASK_DEBUG=True
+FLASK_HOST=0.0.0.0               # Use 127.0.0.1 for local-only access
+FLASK_PORT=5001                  # Port for the Flask API server (5000 is often used by AirPlay on macOS)
+FLASK_DEBUG=True                 # Set to False in production
+
+# Frontend Configuration (optional)
+FRONTEND_PORT=8000               # Port for the frontend server
 ```
 
 ## 📝 License
