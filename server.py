@@ -1,18 +1,34 @@
+"""
+Frontend Server Module
+
+This module provides a simple HTTP server to serve the frontend files.
+It's used during development to avoid CORS issues.
+"""
+
 import http.server
 import socketserver
 import sys
-
-PORT = 8000
-DIRECTORY = "frontend"
+from config import FRONTEND_PORT
 
 class Handler(http.server.SimpleHTTPRequestHandler):
+    """Handler for serving frontend files."""
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=DIRECTORY, **kwargs)
+        super().__init__(*args, directory="frontend", **kwargs)
 
 def run_server(port):
+    """
+    Run the frontend server on the specified port.
+    
+    Args:
+        port (int): The port to run the server on
+        
+    Raises:
+        OSError: If the port is already in use
+        KeyboardInterrupt: If the server is stopped with Ctrl+C
+    """
     try:
         with socketserver.TCPServer(("", port), Handler) as httpd:
-            print(f"Serving at http://localhost:{port}")
+            print(f"Serving frontend at http://localhost:{port}")
             print("Press Ctrl+C to stop the server")
             httpd.serve_forever()
     except OSError as e:
@@ -29,4 +45,4 @@ def run_server(port):
         sys.exit(0)
 
 if __name__ == "__main__":
-    run_server(PORT) 
+    run_server(FRONTEND_PORT) 
