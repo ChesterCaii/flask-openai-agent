@@ -1,16 +1,101 @@
-# Flask OpenAI Agent Starter Kit
+# 🧠 Flask + OpenAI Agent Starter
 
-A production-ready starter kit for building AI-powered chat applications using Flask and OpenAI's API.
+A production-ready starter kit for building AI-powered chat applications using Flask and OpenAI's API. Perfect for hackathons, research projects, or building your own AI-powered SaaS tools.
 
-## Features
+## 🚀 Features
 - 🧠 OpenAI integration with conversation history support
 - 🔄 RESTful API with CORS enabled
 - 🎨 Modern, responsive frontend
 - ⚙️ Configurable through environment variables
 - 🧪 Health check endpoint
-- 📝 Comprehensive documentation
+- 📝 Comprehensive documentation and examples
+- 🧪 Unit tests included
 
-## Project Structure
+## 🛠 Quick Start
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/flask-openai-agent.git
+   cd flask-openai-agent
+   ```
+
+2. Set up your environment:
+   ```bash
+   # Create and activate virtual environment
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+   # Install dependencies
+   pip install -r requirements.txt
+
+   # Set up environment variables
+   cp .env.example .env
+   ```
+
+3. Edit `.env` and add your OpenAI API key:
+   ```
+   OPENAI_API_KEY=your-api-key-here
+   ```
+
+4. Run the application:
+   ```bash
+   # Terminal 1: Start the Flask server
+   python app.py
+
+   # Terminal 2: Start the frontend server
+   python server.py
+   ```
+
+5. Open http://localhost:8000 in your browser
+
+## 🔍 Testing
+
+Run the test suite:
+```bash
+pytest tests/
+```
+
+## 📡 API Examples
+
+### Health Check
+```bash
+curl http://localhost:5000/ping
+```
+
+### Chat with the Agent
+```bash
+curl -X POST http://localhost:5000/ask \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "What is the capital of France?",
+    "system": "You are a helpful geography expert.",
+    "history": []
+  }'
+```
+
+### Multi-turn Conversation
+```bash
+curl -X POST http://localhost:5000/ask \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Tell me more about that.",
+    "history": [
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": "What is Python?"},
+      {"role": "assistant", "content": "Python is a programming language."}
+    ]
+  }'
+```
+
+## 🎯 Use Cases
+
+- 🤖 Building AI-powered chatbots
+- 📚 Educational tools and tutoring systems
+- 💬 Customer support automation
+- 🔍 Research and experimentation with LLMs
+- 🛠 Prototyping AI features for larger applications
+
+## 📁 Project Structure
 ```
 flask-openai-agent/
 ├── agent/             # OpenAI agent implementation
@@ -21,81 +106,37 @@ flask-openai-agent/
 │   └── routes.py
 ├── frontend/         # Frontend assets
 │   └── index.html
+├── tests/           # Test suite
+│   └── test_api.py
 ├── app.py           # Main application entry point
 ├── config.py        # Configuration management
 ├── requirements.txt # Python dependencies
 └── .env.example     # Environment variables template
 ```
 
-## Setup
+## 🔧 Configuration
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/flask-openai-agent.git
-   cd flask-openai-agent
-   ```
+The application can be configured through environment variables in `.env`:
 
-2. Create and activate a virtual environment (optional but recommended):
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+```env
+# OpenAI Configuration
+OPENAI_API_KEY=your-api-key-here
+OPENAI_MODEL=gpt-3.5-turbo
 
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Flask Configuration
+FLASK_HOST=0.0.0.0
+FLASK_PORT=5000
+FLASK_DEBUG=True
+```
 
-4. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   ```
-   Edit `.env` and add your OpenAI API key and any other custom settings.
+## 📝 License
 
-## Running the Application
+MIT License - feel free to use this project for your own purposes.
 
-1. Start the Flask server:
-   ```bash
-   python app.py
-   ```
-
-2. In a separate terminal, start the frontend server:
-   ```bash
-   python server.py
-   ```
-
-3. Open your browser and navigate to:
-   ```
-   http://localhost:8000
-   ```
-
-## API Endpoints
-
-- `GET /ping`: Health check endpoint
-- `POST /ask`: Chat endpoint
-  ```json
-  {
-    "prompt": "Your message here",
-    "system": "Optional system prompt",
-    "history": [] // Optional conversation history
-  }
-  ```
-
-## Development
-
-- The application uses Flask's debug mode by default
-- CORS is enabled for all routes
-- Frontend is served on port 8000
-- Backend API runs on port 5000
-
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Commit your changes
 4. Push to the branch
-5. Create a Pull Request
-
-## License
-
-MIT License - feel free to use this project for your own purposes. 
+5. Create a Pull Request 
