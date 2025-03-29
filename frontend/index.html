@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Agent Demo</title>
+  </head>
+  <body>
+    <h1>Ask the Agent</h1>
+    <input type="text" id="prompt" placeholder="Enter a prompt"/>
+    <button onclick="ask()">Send</button>
+    <p id="response"></p>
+
+    <script>
+      async function ask() {
+        const prompt = document.getElementById("prompt").value;
+        const res = await fetch("http://localhost:5000/ask", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({prompt})
+        });
+        const data = await res.json();
+        document.getElementById("response").textContent = data.response;
+      }
+    </script>
+  </body>
+</html> 
