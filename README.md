@@ -89,11 +89,47 @@ curl -X POST http://localhost:5000/ask \
 
 ## 🎯 Use Cases
 
-- 🤖 Building AI-powered chatbots
-- 📚 Educational tools and tutoring systems
-- 💬 Customer support automation
-- 🔍 Research and experimentation with LLMs
-- 🛠 Prototyping AI features for larger applications
+### 🤖 AI Chatbots
+- Customer support automation
+- FAQ bots
+- Lead qualification
+- Appointment scheduling
+
+### 📚 Educational Tools
+- **Student Assistant**: Create an AI tutor that explains complex topics step-by-step
+  ```json
+  {
+    "system": "You are a patient and knowledgeable tutor. Break down complex topics into simple steps, use examples, and check for understanding.",
+    "prompt": "Can you explain quantum computing in simple terms?"
+  }
+  ```
+- Interactive problem-solving guides
+- Homework help systems
+- Language learning companions
+
+### 🔍 Research & Analysis
+- **Research Summarizer**: Build an AI that answers questions about uploaded papers
+  ```json
+  {
+    "system": "You are a research assistant. Analyze papers and provide concise, accurate summaries. Always cite specific sections.",
+    "prompt": "What are the key findings about climate change in this paper?"
+  }
+  ```
+- Literature review assistants
+- Data analysis interpreters
+- Citation generators
+
+### 💼 SaaS Support
+- **AI Support Agent**: Create a 24/7 support system for your SaaS product
+  ```json
+  {
+    "system": "You are a technical support specialist for [Your Product]. Help users troubleshoot issues, explain features, and provide best practices.",
+    "prompt": "How do I integrate the API with my application?"
+  }
+  ```
+- Feature guides
+- Troubleshooting assistants
+- Onboarding helpers
 
 ## 📁 Project Structure
 ```
