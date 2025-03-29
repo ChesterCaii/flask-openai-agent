@@ -1,25 +1,164 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Agent Demo</title>
+    <title>AI Agent Demo</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      h1 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+      }
+      select, input, button {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+      #response {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        white-space: pre-wrap;
+      }
+      .loading {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .error {
+        color: #e74c3c;
+        background-color: #fadbd8;
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
+      .status {
+        font-size: 0.9em;
+        color: #7f8c8d;
+        margin-top: 10px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Ask the Agent</h1>
-    <input type="text" id="prompt" placeholder="Enter a prompt"/>
-    <button onclick="ask()">Send</button>
-    <p id="response"></p>
+    <div class="container">
+      <h1>🤖 AI Agent Demo</h1>
+      
+      <select id="persona">
+        <option value="You are a helpful assistant.">Default Assistant</option>
+        <option value="You are a sarcastic but knowledgeable assistant who always adds humor to responses.">Sarcastic Assistant</option>
+        <option value="You are an expert programmer who provides detailed technical explanations.">Expert Programmer</option>
+        <option value="You are a creative writer who responds with flair and imagination.">Creative Writer</option>
+      </select>
+
+      <input type="text" id="prompt" placeholder="Enter your prompt here..."/>
+      <button onclick="ask()">Send</button>
+      
+      <div id="status" class="status"></div>
+      <div id="response"></div>
+    </div>
 
     <script>
-      async function ask() {
-        const prompt = document.getElementById("prompt").value;
-        const res = await fetch("http://localhost:5000/ask", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({prompt})
-        });
-        const data = await res.json();
-        document.getElementById("response").textContent = data.response;
+      const API_URL = "http://localhost:5000/ask";
+      const statusEl = document.getElementById("status");
+
+      // Check if API is available
+      async function checkAPI() {
+        try {
+          const res = await fetch(API_URL, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({prompt: "test", system: "test"})
+          });
+          if (res.ok) {
+            statusEl.textContent = "✅ API is connected";
+            statusEl.style.color = "#27ae60";
+          } else {
+            throw new Error("API returned error");
+          }
+        } catch (error) {
+          statusEl.textContent = "❌ Error: Cannot connect to API. Make sure the Flask server is running on port 5000";
+          statusEl.style.color = "#e74c3c";
+        }
       }
+
+      async function ask() {
+        const promptEl = document.getElementById("prompt");
+        const responseEl = document.getElementById("response");
+        const button = document.querySelector("button");
+        const persona = document.getElementById("persona");
+
+        if (!promptEl.value.trim()) {
+          responseEl.textContent = "Please enter a prompt";
+          responseEl.className = "error";
+          return;
+        }
+
+        // Disable UI while loading
+        button.classList.add("loading");
+        promptEl.disabled = true;
+        responseEl.textContent = "Thinking...";
+        responseEl.className = "";
+
+        try {
+          const res = await fetch(API_URL, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+              prompt: promptEl.value,
+              system: persona.value
+            })
+          });
+          
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          
+          const data = await res.json();
+          responseEl.textContent = data.response;
+          promptEl.value = ""; // Clear input after successful response
+        } catch (error) {
+          responseEl.textContent = "Error: " + error.message + "\n\nPlease make sure:\n1. The Flask server is running (python3 api/app.py)\n2. You have set your OpenAI API key in the .env file";
+          responseEl.className = "error";
+        } finally {
+          // Re-enable UI
+          button.classList.remove("loading");
+          promptEl.disabled = false;
+        }
+      }
+
+      // Allow Enter key to submit
+      document.getElementById("prompt").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+          ask();
+        }
+      });
+
+      // Check API connection on page load
+      checkAPI();
     </script>
   </body>
 </html> 
