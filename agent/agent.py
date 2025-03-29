@@ -11,12 +11,13 @@ class Agent:
         # Set the API key from environment variable
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
-    def run(self, prompt, system="You are a helpful assistant."):
+    def run(self, history):
+        """
+        Run the agent with a conversation history.
+        history: List of message dictionaries with 'role' and 'content' keys
+        """
         response = openai.ChatCompletion.create(
             model=self.model,
-            messages=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": prompt}
-            ]
+            messages=history
         )
         return response.choices[0].message["content"].strip() 
